@@ -19,17 +19,14 @@ def train(args):
     channel_input_dirs = '/opt/ml/input/data/training/'
     
     X_train = np.load(channel_input_dirs + 'X_train.npy')
-    X_test = np.load(channel_input_dirs + 'X_test.npy')
     y_train = np.load(channel_input_dirs + 'y_train.npy')
-    y_test = np.load(channel_input_dirs + 'y_test.npy')
     
     model = Sequential()  
     model.add(LSTM(hidden_neurons, batch_input_shape=(None, length_of_sequences, in_out_neurons), return_sequences=False))  
     model.add(Dense(in_out_neurons))  
     model.add(Activation("linear"))  
     model.compile(loss="mean_squared_error", optimizer="rmsprop")
-    model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=validation_split,verbose=1,validation_data=(X_test, y_test))
-    score = model.evaluate(X_test, y_test, verbose=0)
+    model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=validation_split,verbose=1) #,validation_data=(X_test, y_test))
 
     save(model, args.model_dir)
     
