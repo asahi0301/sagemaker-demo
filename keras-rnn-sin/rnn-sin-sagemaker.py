@@ -16,8 +16,10 @@ def train(args):
     epochs = 15
     validation_split = 0.05
     
+    # SageMakerのトレーニングに使われるコンテナは起動時に、inputで指定したS3からデータをダウンロードし以下のパスに保存します
     channel_input_dirs = '/opt/ml/input/data/training/'
     
+    # トレーニング用データを読み込みます
     X_train = np.load(channel_input_dirs + 'X_train.npy')
     y_train = np.load(channel_input_dirs + 'y_train.npy')
     
@@ -26,7 +28,8 @@ def train(args):
     model.add(Dense(in_out_neurons))  
     model.add(Activation("linear"))  
     model.compile(loss="mean_squared_error", optimizer="rmsprop")
-    model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=validation_split,verbose=1) #,validation_data=(X_test, y_test))
+    
+    model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=validation_split,verbose=1)
 
     save(model, args.model_dir)
     
